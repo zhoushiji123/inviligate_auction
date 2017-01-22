@@ -239,4 +239,31 @@ public class DateUtil {
         return diffSecond.intValue();
     }
 
+
+    /**
+     * 普通日期转unix时间搓
+     * @param date
+     * @return
+     */
+    public static String dateToUnix(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        long mills = calendar.getTimeInMillis()/1000L;
+        return String.valueOf(mills);
+    }
+
+
+    /**
+     * unix时间搓转普通日期
+     * @param unixTime
+     * @return
+     */
+    public static String unixToDate(String unixTime){
+        long mills = Long.parseLong(unixTime);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(mills*1000L);
+        Date date = calendar.getTime();
+        return DateUtil.dateToString(date,YMD_DASH_WITH_TIME);
+    }
+
 }

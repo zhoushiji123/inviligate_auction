@@ -1,5 +1,6 @@
 package com.zsj.test;
 
+import com.sun.org.apache.bcel.internal.generic.DADD;
 import com.zsj.util.DateUtil;
 
 import java.util.Calendar;
@@ -18,9 +19,10 @@ public class Test {
 //        long diff = d2.getTime() - d1.getTime();
 //        System.out.println(diff/1000L);
          Date date1 = DateUtil.stringToDate("2017-01-22 15:30:00",DateUtil.YMD_DASH_WITH_TIME);
-         Date date2 = DateUtil.stringToDate("2017-01-22 15:20:00 ",DateUtil.YMD_DASH_WITH_TIME);
-         int diff = DateUtil.secondDiff(date1,date2);
-         System.out.println(diff);
+         String unix = DateUtil.dateToUnix(date1);
+         System.out.println(unix);
+         String dateStr = DateUtil.unixToDate(unix);
+        System.out.println(dateStr);
 
     }
 }
