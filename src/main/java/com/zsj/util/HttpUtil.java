@@ -63,8 +63,10 @@ public class HttpUtil {
         return  res;
     }
 
+
+
     /**
-     * post发送表单
+     * post发送表单请求
      * @param url
      * @param param
      * @return
@@ -74,9 +76,8 @@ public class HttpUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         try{
             HttpPost httpPost = new HttpPost(url);
-         //   httpPost.setEntity(new UrlEncodedFormEntity(list, "UTF-8"));
-            httpPost.setHeader("Content-Type","application/x-www-form-urlencoded");
             httpPost.setEntity(new StringEntity(JSONObject.toJSONString(param)));
+            httpPost.setHeader("Content-Type","application/x-www-form-urlencoded");
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             res = EntityUtils.toString(entity);
