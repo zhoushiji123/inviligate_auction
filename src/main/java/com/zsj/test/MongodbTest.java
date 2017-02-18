@@ -36,9 +36,10 @@ public class MongodbTest {
 
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
         MongoService mongoService = (MongoService)applicationContext.getBean("mongoServiceImpl");
-        List<JSONObject> list = mongoService.findAll();
-        for(JSONObject jsonObject : list)
-            System.out.println(jsonObject);
+        JSONObject obj = new JSONObject();
+        obj.put("name","qq");
+        obj.put("age",88);
+        mongoService.updateByName(obj);
 
 
     }

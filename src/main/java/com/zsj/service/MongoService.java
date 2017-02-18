@@ -10,4 +10,14 @@ import java.util.List;
 public interface MongoService {
 
     List<JSONObject> findAll();
+
+    JSONObject findByName(JSONObject obj);
+
+    void add(JSONObject obj);
+
+    void updateByName(JSONObject obj);
+
+    void deleteByName(JSONObject obj);
+
+
 }
