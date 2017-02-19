@@ -2,6 +2,7 @@ package com.zsj.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.*;
+import com.zsj.model.ResultMessage;
 import com.zsj.service.MongoService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -38,9 +39,8 @@ public class MongodbTest {
         MongoService mongoService = (MongoService)applicationContext.getBean("mongoServiceImpl");
         JSONObject obj = new JSONObject();
         obj.put("name","qq");
-        obj.put("age",88);
-        mongoService.updateByName(obj);
-
+        ResultMessage resultMessage = mongoService.findByName(obj);
+        System.out.println(resultMessage);
 
     }
 }

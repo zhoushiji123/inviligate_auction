@@ -1,6 +1,7 @@
 package com.zsj.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zsj.model.ResultMessage;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface MongoService {
 
     List<JSONObject> findAll();
 
-    JSONObject findByName(JSONObject obj);
+    ResultMessage findByName(JSONObject obj);
 
     void add(JSONObject obj);
 

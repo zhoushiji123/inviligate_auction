@@ -1,6 +1,7 @@
 package com.zsj.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zsj.model.ResultMessage;
 import com.zsj.service.MongoService;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -26,10 +27,12 @@ public class MongoServiceImpl implements MongoService {
     }
 
 
-    public JSONObject findByName(JSONObject obj) {
+    public ResultMessage findByName(JSONObject obj) {
+        ResultMessage resultMessage  = new ResultMessage();
         String name = obj.getString("name");
         JSONObject res = mongoTemplate.findOne(new Query(Criteria.where("name").is(name)),JSONObject.class,"users");
-        return res;
+        resultMessage.setData(res);
+        return resultMessage;
     }
 
     public void add(JSONObject obj) {
