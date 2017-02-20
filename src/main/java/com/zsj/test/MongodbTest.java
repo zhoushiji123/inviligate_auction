@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mongodb.*;
 import com.zsj.model.ResultMessage;
 import com.zsj.service.MongoService;
+import org.bson.types.ObjectId;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -40,7 +41,8 @@ public class MongodbTest {
         JSONObject obj = new JSONObject();
         obj.put("name","qq");
         ResultMessage resultMessage = mongoService.findByName(obj);
-        System.out.println(resultMessage);
+        JSONObject data = (JSONObject)resultMessage.getData();
+        System.out.println(data);
 
     }
 }

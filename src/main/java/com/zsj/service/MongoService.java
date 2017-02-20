@@ -12,6 +12,8 @@ public interface MongoService {
 
     List<JSONObject> findAll();
 
+    List<JSONObject> findByPage(JSONObject obj);
+
     ResultMessage findByName(JSONObject obj);
 
     void add(JSONObject obj);
@@ -20,5 +22,7 @@ public interface MongoService {
 
     void deleteByName(JSONObject obj);
 
+
+    JSONObject setId(JSONObject obj);
 
 }
