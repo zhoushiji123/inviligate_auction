@@ -11,7 +11,9 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by zsj on 2017/2/21.
@@ -32,13 +34,18 @@ public  abstract class ObjDaoImpl  implements ObjDao {
 
 
     public PageModel<JSONObject> findByPage(JSONObject obj) {
-        int pageindex = obj.getInteger("pageIndex");
-        int pageSize = obj.getInteger("pageSize");
+        Integer pageIndex = obj.getInteger("pageIndex") ;
+        Integer pageSize  =  obj.getInteger("pageSize") ;
+        if(pageSize == null || pageIndex == null){
+            pageSize = 100;
+            pageIndex = 1;
+        }
+
         collectionName = obj.getString("collectionName");
         PageModel<JSONObject> pageModel = new PageModel();
 
         List<JSONObject> datalist = new ArrayList();
-        Query query = new Query().skip( (pageindex -1) * pageSize).limit(pageSize);
+        Query query = new Query().skip( (pageIndex -1) * pageSize).limit(pageSize);
         List<JSONObject> list = mongoTemplate.find(query,JSONObject.class,collectionName);
 
         if(list.size() == 0){
@@ -54,7 +61,7 @@ public  abstract class ObjDaoImpl  implements ObjDao {
         pageModel.setData(datalist);
         pageModel.setCount(datalist.size());
         pageModel.setPageSize(pageSize);
-        pageModel.setPageIndex(pageindex);
+        pageModel.setPageIndex(pageIndex);
 
         return pageModel;
     }
@@ -83,23 +90,62 @@ public  abstract class ObjDaoImpl  implements ObjDao {
         return pageModel;
     }
 
-    public ResultMessage findById(JSONObject obj) {
-        ResultMessage resultMessage  = new ResultMessage();
-        String id = obj.getString("_id");
-        collectionName = obj.getString("collectionName");
-        Query query = new Query(Criteria.where("_id").is(id));
+    public PageModel<JSONObject> findByTerm(JSONObject obj) {
+        Integer pageIndex = obj.getInteger("pageIndex") ;
+        Integer pageSize  =  obj.getInteger("pageSize") ;
+        if(pageSize == null || pageIndex == null) {
+            pageSize = 100;
+            pageIndex = 1;
+        }else {
+            obj.remove("pageIndex");
+            obj.remove("pageSize");
+        }
 
-        JSONObject res = mongoTemplate.findOne(query,JSONObject.class,collectionName);
-        if(res  == null){
-            resultMessage.setSuccess(false);
-            resultMessage.setMessage("没有查询到数据");
+
+        PageModel<JSONObject> pageModel = new PageModel<JSONObject>();
+        collectionName = obj.remove("collectionName").toString();
+        Criteria criteria ;
+
+        Set<String> keySet = obj.keySet();
+        Iterator<String> keyIterator =  keySet.iterator();
+        if(keySet.size() == 1){
+            //只有1个条件
+            String key = keyIterator.next();
+            Object value = obj.getObject(key,Object.class);
+            criteria = Criteria.where(key).is(value);
+        }else{
+            //有多个条件
+            String key = keyIterator.next();
+            Object value = obj.getObject(key,Object.class);
+            criteria = Criteria.where(key).is(value);
+
+            while (keyIterator.hasNext()){
+                key = keyIterator.next();
+                value = obj.getObject(key,Object.class);
+                criteria.and(key).is(value);
+            }
+        }
+
+        Query query = new Query(criteria).skip((pageIndex -1)*pageSize ).limit(pageSize);
+
+        List<JSONObject> resList = mongoTemplate.find(query,JSONObject.class,collectionName);
+        if(resList.size()  == 0){
+            pageModel.setSuccess(false);
+            pageModel.setMessage("没有查询到数据");
         }
         else{
-            res = this.setId(res);
-            resultMessage.setData(res);
+            List<JSONObject> dataList = new ArrayList<JSONObject>();
+            for(JSONObject res : resList){
+                res = this.setId(res);
+                dataList.add(res);
+            }
+            pageModel.setData(dataList);
+            pageModel.setCount(dataList.size());
+            pageModel.setPageIndex(pageIndex);
+            pageModel.setPageSize(pageSize);
         }
 
-        return resultMessage;
+        return pageModel;
     }
 
     public ResultMessage insert(JSONObject obj) {

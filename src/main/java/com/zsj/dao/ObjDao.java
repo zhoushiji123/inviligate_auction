@@ -23,7 +23,13 @@ public interface ObjDao {
 
     PageModel<JSONObject> findAll(JSONObject obj);
 
-    ResultMessage findById(JSONObject obj);
+    /**
+     * 条件查询(支持单条件 多条件 )
+     * 可分页
+     * @param obj
+     * @return
+     */
+    PageModel<JSONObject> findByTerm(JSONObject obj);
 
     ResultMessage insert(JSONObject obj);
 
