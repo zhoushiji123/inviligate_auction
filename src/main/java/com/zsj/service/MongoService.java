@@ -1,6 +1,7 @@
 package com.zsj.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 
 import java.util.List;
@@ -12,9 +13,9 @@ public interface MongoService {
 
     List<JSONObject> findAll();
 
-    List<JSONObject> findByPage(JSONObject obj);
+    PageModel<JSONObject> findByPage(JSONObject obj);
 
-    ResultMessage findByName(JSONObject obj);
+    ResultMessage findById(JSONObject obj);
 
     void add(JSONObject obj);
 

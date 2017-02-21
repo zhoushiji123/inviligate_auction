@@ -2,6 +2,7 @@ package com.zsj.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.*;
+import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 import com.zsj.service.MongoService;
 import org.bson.types.ObjectId;
@@ -39,10 +40,10 @@ public class MongodbTest {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
         MongoService mongoService = (MongoService)applicationContext.getBean("mongoServiceImpl");
         JSONObject obj = new JSONObject();
-        obj.put("name","qq");
-        ResultMessage resultMessage = mongoService.findByName(obj);
-        JSONObject data = (JSONObject)resultMessage.getData();
-        System.out.println(data);
+        obj.put("_id","58a29e7db6af24e727dd44f7");
+        ResultMessage resultMessage = mongoService.findById(obj);
+        System.out.println(resultMessage);
+
 
     }
 }

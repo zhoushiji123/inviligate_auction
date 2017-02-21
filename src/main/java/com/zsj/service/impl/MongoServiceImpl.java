@@ -1,6 +1,7 @@
 package com.zsj.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 import com.zsj.service.MongoService;
 import org.bson.types.ObjectId;
@@ -24,7 +25,9 @@ public class MongoServiceImpl implements MongoService {
     private MongoTemplate mongoTemplate;
 
     public List<JSONObject> findAll() {
+
         List<JSONObject> datalist = new ArrayList<JSONObject>();
+        Query query = new Query();
         List<JSONObject> list =  mongoTemplate.findAll(JSONObject.class, "users");
         for(JSONObject jsonObject : list){
             datalist.add(this.setId(jsonObject));
@@ -33,12 +36,22 @@ public class MongoServiceImpl implements MongoService {
     }
 
 
-    public ResultMessage findByName(JSONObject obj) {
+    public ResultMessage findById(JSONObject obj) {
         ResultMessage resultMessage  = new ResultMessage();
-        String name = obj.getString("name");
-        JSONObject res = mongoTemplate.findOne(new Query(Criteria.where("name").is(name)),JSONObject.class,"users");
-        res = this.setId(res);
-        resultMessage.setData(res);
+        String id = obj.getString("_id");
+
+        Query query = new Query(Criteria.where("_id").is(id));
+
+        JSONObject res = mongoTemplate.findOne(query,JSONObject.class,"users");
+        if(res  == null){
+            resultMessage.setSuccess(false);
+            resultMessage.setMessage("没有查询到数据");
+        }
+        else{
+            res = this.setId(res);
+            resultMessage.setData(res);
+        }
+
         return resultMessage;
     }
 
@@ -66,11 +79,25 @@ public class MongoServiceImpl implements MongoService {
         return obj;
     }
 
-    public List<JSONObject> findByPage(JSONObject obj) {
+    public PageModel<JSONObject> findByPage(JSONObject obj) {
         int pageindex = obj.getInteger("pageIndex");
         int pageSize = obj.getInteger("pageSize");
-        List<JSONObject> datalist = new ArrayList<JSONObject>();
-//        List<JSONObject> list = mongoTemplate.find(new Query(Criteria.where("").));
-        return null;
+
+        PageModel<JSONObject> pageModel = new PageModel();
+
+        List<JSONObject> datalist = new ArrayList();
+        Query query = new Query().skip( (pageindex -1) * pageSize).limit(pageSize);
+        List<JSONObject> list = mongoTemplate.find(query,JSONObject.class,"users");
+
+        for(JSONObject jsonObject : list){
+            datalist.add(this.setId(jsonObject));
+        }
+
+        pageModel.setData(datalist);
+        pageModel.setCount(datalist.size());
+        pageModel.setPageSize(pageSize);
+        pageModel.setPageIndex(pageindex);
+
+        return pageModel;
     }
 }
