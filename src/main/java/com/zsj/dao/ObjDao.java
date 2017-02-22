@@ -33,7 +33,18 @@ public interface ObjDao {
 
     ResultMessage insert(JSONObject obj);
 
-    ResultMessage updateById(JSONObject obj);
+    /**
+     *
+     * @param obj
+     * {
+     *     "collectionName" :"" ,
+     *     "queryParam":{},
+     *     "updateParam":{}
+     * }
+     * @return
+     */
+    ResultMessage update(JSONObject obj);
+
 
     ResultMessage deleteById(JSONObject obj);
 

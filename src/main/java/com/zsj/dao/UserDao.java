@@ -14,15 +14,4 @@ import org.springframework.stereotype.Repository;
 public class UserDao extends ObjDaoImpl{
 
 
-    @Override
-    public ResultMessage updateById(JSONObject obj) {
-        ResultMessage resultMessage = new ResultMessage();
-        collectionName = obj.getString("collectionName");
-        String id  = obj.getString("_id");
-        Query query = new Query(Criteria.where("_id").is(id));
-
-
-
-        return resultMessage;
-    }
 }

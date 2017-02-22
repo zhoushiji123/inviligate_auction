@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,13 +26,6 @@ public  abstract class ObjDaoImpl  implements ObjDao {
     public MongoTemplate mongoTemplate;
 
     public String collectionName ;
-
-
-
-
-    public abstract ResultMessage updateById(JSONObject obj) ;
-
-
 
     public PageModel<JSONObject> findByPage(JSONObject obj) {
         Integer pageIndex = obj.getInteger("pageIndex") ;
@@ -156,6 +150,49 @@ public  abstract class ObjDaoImpl  implements ObjDao {
         return resultMessage;
     }
 
+    public ResultMessage update(JSONObject obj) {
+        ResultMessage resultMessage = new ResultMessage();
+        collectionName = obj.getString("collectionName");
+        JSONObject queryParam = obj.getJSONObject("queryParam");
+        JSONObject updateParam  = obj.getJSONObject("updateParam");
+
+        Criteria criteria ;
+        Update update = new Update();
+
+        Set<String> queryKeySet = queryParam.keySet();
+        Iterator<String> queryIterator = queryKeySet.iterator();
+        Set<String> updateKeySet = updateParam.keySet();
+        Iterator<String> updateIterator =  updateKeySet.iterator();
+
+        if(queryKeySet.size() == 1){
+            //只有1个查询条件
+            String key = queryIterator.next();
+            Object value = queryParam.get(key);
+            criteria = Criteria.where(key).is(value);
+        }else{
+            //有多个查询条件
+            String key = queryIterator.next();
+            Object value = queryParam.get(key);
+            criteria = Criteria.where(key).is(value);
+            while (queryIterator.hasNext()){
+                key = queryIterator.next();
+                value = queryParam.get(key);
+                criteria.and(key).is(value);
+            }
+        }
+
+        while(updateIterator.hasNext()){
+            String key = updateIterator.next();
+            Object value = updateParam.get(key);
+            update.set(key,value);
+        }
+
+        Query query = new Query(criteria);
+        mongoTemplate.upsert(query,update,collectionName);
+
+        resultMessage.setMessage("修改成功");
+        return resultMessage;
+    }
 
     public ResultMessage deleteById(JSONObject obj) {
         ResultMessage resultMessage = new ResultMessage();
