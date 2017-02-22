@@ -21,11 +21,13 @@ import java.util.Set;
  */
 public  abstract class ObjDaoImpl  implements ObjDao {
 
-
     @Autowired
     public MongoTemplate mongoTemplate;
-
     public String collectionName ;
+
+
+
+
 
     public PageModel<JSONObject> findByPage(JSONObject obj) {
         Integer pageIndex = obj.getInteger("pageIndex") ;
