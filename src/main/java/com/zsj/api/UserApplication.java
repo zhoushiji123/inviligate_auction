@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 import com.zsj.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/zsj/user")
 public class UserApplication {
+
+
+
 
     @Autowired
     private UserService userService;
@@ -38,6 +42,7 @@ public class UserApplication {
 
     @RequestMapping(value = "/login")
     public PageModel<JSONObject> login(@RequestBody JSONObject obj){
+
         return userService.login(obj);
     }
 
