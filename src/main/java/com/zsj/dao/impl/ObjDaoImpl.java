@@ -194,11 +194,35 @@ public  abstract class ObjDaoImpl  implements ObjDao {
         return resultMessage;
     }
 
-    public ResultMessage deleteById(JSONObject obj) {
+
+    public ResultMessage deleteByTerm(JSONObject obj) {
         ResultMessage resultMessage = new ResultMessage();
         collectionName = obj.remove("collectionName").toString();
-        String id =  obj.getString("_id");
-        mongoTemplate.remove(new Query(Criteria.where("_id").is(id)),collectionName);
+
+        Criteria criteria ;
+        Set<String> keySet = obj.keySet();
+        Iterator<String> keyIterator =  keySet.iterator();
+        if(keySet.size() == 1){
+            //只有1个条件
+            String key = keyIterator.next();
+            Object value = obj.getObject(key,Object.class);
+            criteria = Criteria.where(key).is(value);
+        }else{
+            //有多个条件
+            String key = keyIterator.next();
+            Object value = obj.getObject(key,Object.class);
+            criteria = Criteria.where(key).is(value);
+
+            while (keyIterator.hasNext()){
+                key = keyIterator.next();
+                value = obj.getObject(key,Object.class);
+                criteria.and(key).is(value);
+            }
+        }
+
+        Query query = new Query(criteria);
+        mongoTemplate.remove(query,collectionName);
+
         resultMessage.setMessage("删除成功");
         return resultMessage;
     }

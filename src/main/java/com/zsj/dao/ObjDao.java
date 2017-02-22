@@ -46,7 +46,7 @@ public interface ObjDao {
     ResultMessage update(JSONObject obj);
 
 
-    ResultMessage deleteById(JSONObject obj);
+    ResultMessage deleteByTerm(JSONObject obj);
 
 
     /**

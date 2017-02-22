@@ -43,17 +43,10 @@ public class MongodbTest {
         UserDao userDao = (UserDao)applicationContext.getBean("userDao");
         JSONObject obj = new JSONObject();
         obj.put("collectionName","users");
-        JSONObject query = new JSONObject();
-        query.put("name","qq");
-        query.put("age",88);
-        JSONObject update = new JSONObject();
-        update.put("class",3);
-        update.put("age",77);
+        obj.put("name","qq");
 
-        obj.put("queryParam",query);
-        obj.put("updateParam",update);
-
-        ResultMessage resultMessage =  userDao.update(obj);
+        ResultMessage resultMessage ;
+        resultMessage =  userDao.deleteByTerm(obj);
         System.out.println(resultMessage);
 
 
