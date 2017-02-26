@@ -22,16 +22,13 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     public ResultMessage register(JSONObject obj) {
-
         return userDao.insert(obj);
     }
 
 
 
     public PageModel<JSONObject> login(JSONObject obj) {
-        if(logger.isDebugEnabled()){
-            logger.debug("用户登录--传入json参数为："+obj.toJSONString());
-        }
-        return userDao.findByTerm(obj);
+        PageModel<JSONObject> pageModel = userDao.findByTerm(obj);
+        return pageModel;
     }
 }
