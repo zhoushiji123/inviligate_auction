@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * Created by zsj on 2017/1/22.
  */
@@ -42,8 +44,22 @@ public class UserApplication {
 
 
     @RequestMapping(value = "/login")
-    public PageModel<JSONObject> login(@RequestBody JSONObject obj){
-        return userService.login(obj);
+    public PageModel<JSONObject> login(@RequestBody JSONObject obj , HttpSession session){
+        PageModel<JSONObject> pageModel = userService.login(obj);
+        if(pageModel.getCount() > 0){
+            JSONObject user =pageModel.getData().get(0);
+            session.setAttribute("user",user);
+        }
+        return pageModel;
+    }
+
+
+
+    @RequestMapping(value = "/logout")
+    public ResultMessage logout(@RequestBody JSONObject obj,HttpSession session){
+        System.out.println("清空session");
+        session.invalidate();
+        return new ResultMessage();
     }
 
 
