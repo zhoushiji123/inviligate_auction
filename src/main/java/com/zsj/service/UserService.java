@@ -14,4 +14,6 @@ public interface UserService {
 
     PageModel<JSONObject>  login(JSONObject obj);
 
+    ResultMessage updatePassword(JSONObject obj);
+
 }

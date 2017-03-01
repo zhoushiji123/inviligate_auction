@@ -56,4 +56,22 @@ public class UserServiceImpl implements UserService {
             pageModel.setMessage("用户名或者密码错误");
         return pageModel;
     }
+
+
+    public ResultMessage updatePassword(JSONObject obj) {
+        JSONObject param = new JSONObject();
+        JSONObject query = new JSONObject();
+        JSONObject update = new JSONObject();
+
+        query.put("username",obj.getString("username"));
+        update.put("password",obj.getString("newPassword"));
+
+        param.put("collectionName","users");
+        param.put("queryParam",query);
+        param.put("updateParam",update);
+
+        ResultMessage resultMessage = userDao.update(param);
+
+        return resultMessage;
+    }
 }

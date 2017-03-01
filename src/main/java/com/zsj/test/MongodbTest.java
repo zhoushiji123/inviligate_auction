@@ -2,10 +2,12 @@ package com.zsj.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.*;
+import com.sun.corba.se.spi.orbutil.fsm.Guard;
 import com.zsj.dao.UserDao;
 import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 import com.zsj.service.MongoService;
+import com.zsj.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -40,13 +42,13 @@ public class MongodbTest {
 
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 //        MongoService mongoService = (MongoService)applicationContext.getBean("mongoServiceImpl");
-        UserDao userDao = (UserDao)applicationContext.getBean("userDao");
+        UserService userService =(UserService) applicationContext.getBean("userServiceImpl");
         JSONObject obj = new JSONObject();
-        obj.put("collectionName","users");
-        obj.put("name","qq");
+        obj.put("username","zsj");
+        obj.put("newPassword","123");
 
-        ResultMessage resultMessage ;
-        resultMessage =  userDao.deleteByTerm(obj);
+        ResultMessage resultMessage = userService.updatePassword(obj);
+
         System.out.println(resultMessage);
 
 
