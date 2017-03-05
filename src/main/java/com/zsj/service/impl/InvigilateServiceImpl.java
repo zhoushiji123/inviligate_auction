@@ -23,7 +23,6 @@ public class InvigilateServiceImpl implements InvigilateService{
     public ResultMessage addInvigilate(JSONObject obj) {
         ResultMessage resultMessage ;
         obj.put("collectionName",collectionName);
-        obj.put("create_time", DateUtil.getCurrentTime());
         resultMessage = invigilateDao.insert(obj);
         return resultMessage;
     }

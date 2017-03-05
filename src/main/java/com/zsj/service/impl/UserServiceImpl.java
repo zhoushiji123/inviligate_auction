@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
         }
 
         JSONObject param2 = new JSONObject();
-        param2.put("telephone",obj.getString("telephone"));
+        param2.put("telphone",obj.getString("telephone"));
         param2.put("collectionName","users");
         pageModel = userDao.findByTerm(param2);
         if(pageModel.getCount() > 0){

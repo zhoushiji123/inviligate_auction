@@ -42,14 +42,10 @@ public class MongodbTest {
 
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 //        MongoService mongoService = (MongoService)applicationContext.getBean("mongoServiceImpl");
-        UserService userService =(UserService) applicationContext.getBean("userServiceImpl");
-        JSONObject obj = new JSONObject();
-        obj.put("username","zsj");
-        obj.put("newPassword","123");
-
-        ResultMessage resultMessage = userService.updatePassword(obj);
-
-        System.out.println(resultMessage);
+        UserDao userDao =(UserDao) applicationContext.getBean("userDao");
+        JSONObject object = new JSONObject();
+        object.put("collectionName","users");
+        System.out.println(userDao.findByPage(object));
 
 
 

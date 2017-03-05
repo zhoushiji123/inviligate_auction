@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.zsj.dao.ObjDao;
 import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
+import com.zsj.util.DateUtil;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,7 +43,7 @@ public  abstract class ObjDaoImpl  implements ObjDao {
         PageModel<JSONObject> pageModel = new PageModel();
 
         List<JSONObject> datalist = new ArrayList();
-        Query query = new Query().skip( (pageIndex -1) * pageSize).limit(pageSize);
+        Query query = new Query().skip( (pageIndex -1) * pageSize).limit(pageSize).with(new Sort(Sort.Direction.DESC,"create_time"));
         List<JSONObject> list = mongoTemplate.find(query,JSONObject.class,collectionName);
 
         if(list.size() == 0){
@@ -122,7 +124,7 @@ public  abstract class ObjDaoImpl  implements ObjDao {
             }
         }
 
-        Query query = new Query(criteria).skip((pageIndex -1)*pageSize ).limit(pageSize);
+        Query query = new Query(criteria).skip((pageIndex -1)*pageSize ).limit(pageSize).with(new Sort(Sort.Direction.DESC,"create_time"));
 
         List<JSONObject> resList = mongoTemplate.find(query,JSONObject.class,collectionName);
         if(resList.size()  == 0){
@@ -147,6 +149,7 @@ public  abstract class ObjDaoImpl  implements ObjDao {
     public ResultMessage insert(JSONObject obj) {
         ResultMessage resultMessage = new ResultMessage();
         collectionName = obj.remove("collectionName").toString();
+        obj.put("create_time", DateUtil.getCurrentTime());
         mongoTemplate.insert(obj,collectionName);
         resultMessage.setMessage("添加成功");
         return resultMessage;
