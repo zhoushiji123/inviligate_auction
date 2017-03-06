@@ -42,6 +42,10 @@ public  abstract class ObjDaoImpl  implements ObjDao {
         collectionName = obj.getString("collectionName");
         PageModel<JSONObject> pageModel = new PageModel();
 
+//        Criteria criteria ;
+//        criteria = Criteria.where("create_time").gt("2017-03-05 17:37:00").where("create_time").lt("2017-03-05 17:38:00");
+
+
         List<JSONObject> datalist = new ArrayList();
         Query query = new Query().skip( (pageIndex -1) * pageSize).limit(pageSize).with(new Sort(Sort.Direction.DESC,"create_time"));
         List<JSONObject> list = mongoTemplate.find(query,JSONObject.class,collectionName);
@@ -123,6 +127,7 @@ public  abstract class ObjDaoImpl  implements ObjDao {
                 criteria.and(key).is(value);
             }
         }
+
 
         Query query = new Query(criteria).skip((pageIndex -1)*pageSize ).limit(pageSize).with(new Sort(Sort.Direction.DESC,"create_time"));
 

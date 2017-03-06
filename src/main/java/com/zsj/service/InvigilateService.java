@@ -1,6 +1,7 @@
 package com.zsj.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 
 /**
@@ -28,4 +29,16 @@ public interface InvigilateService {
      * @return
      */
     ResultMessage addInvigilate(JSONObject obj);
+
+
+    PageModel<JSONObject> getInvigilates(JSONObject obj);
+
+    PageModel<JSONObject> getInvigilatesByDate(JSONObject obj);
+
+    ResultMessage approve(JSONObject obj) ;
+
+    ResultMessage deny(JSONObject obj) ;
+
+    ResultMessage buy(JSONObject obj) ;
+
 }
