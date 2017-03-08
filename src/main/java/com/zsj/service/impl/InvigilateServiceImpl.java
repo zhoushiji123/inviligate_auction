@@ -77,4 +77,24 @@ public class InvigilateServiceImpl implements InvigilateService{
 
         return resultMessage;
     }
+
+    public ResultMessage update(JSONObject obj) {
+        obj.put("collectionName",collectionName);
+        return invigilateDao.update(obj) ;
+    }
+
+    public ResultMessage delete(JSONObject obj) {
+        obj.put("collectionName",collectionName);
+        return invigilateDao.deleteByTerm(obj) ;
+    }
+
+    public ResultMessage finish(JSONObject obj) {
+        obj.put("collectionName",collectionName);
+        return invigilateDao.update(obj) ;
+    }
+
+    public ResultMessage giveup(JSONObject obj) {
+        obj.put("collectionName",collectionName);
+        return invigilateDao.update(obj) ;
+    }
 }

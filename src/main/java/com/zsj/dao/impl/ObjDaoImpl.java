@@ -103,6 +103,7 @@ public  abstract class ObjDaoImpl  implements ObjDao {
             obj.remove("pageSize");
         }
 
+        Object datetime = obj.remove("datetime");
 
         PageModel<JSONObject> pageModel = new PageModel<JSONObject>();
         collectionName = obj.remove("collectionName").toString();
@@ -128,6 +129,9 @@ public  abstract class ObjDaoImpl  implements ObjDao {
             }
         }
 
+        if(datetime!=null){
+            criteria.and("datetime").gte(DateUtil.getCurrentTime());
+        }
 
         Query query = new Query(criteria).skip((pageIndex -1)*pageSize ).limit(pageSize).with(new Sort(Sort.Direction.DESC,"create_time"));
 

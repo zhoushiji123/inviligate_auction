@@ -41,4 +41,11 @@ public interface InvigilateService {
 
     ResultMessage buy(JSONObject obj) ;
 
+    ResultMessage update(JSONObject obj) ;
+
+    ResultMessage delete(JSONObject obj) ;
+
+    ResultMessage finish(JSONObject obj) ;
+
+    ResultMessage giveup(JSONObject obj) ;
 }

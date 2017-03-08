@@ -53,4 +53,26 @@ public class InvigilateApplication {
     public ResultMessage buy(@RequestBody JSONObject obj){
         return invigilateService.buy(obj);
     }
+
+
+    @RequestMapping(value = "/finish")
+    public ResultMessage finish(@RequestBody JSONObject obj){
+        return invigilateService.finish(obj);
+    }
+
+    @RequestMapping(value = "/giveup")
+    public ResultMessage giveup(@RequestBody JSONObject obj){
+        return invigilateService.giveup(obj);
+    }
+
+
+    @RequestMapping(value = "/update")
+    public ResultMessage update(@RequestBody JSONObject obj){
+        return invigilateService.update(obj);
+    }
+
+    @RequestMapping(value = "/delete")
+    public ResultMessage delete(@RequestBody JSONObject obj){
+        return invigilateService.delete(obj);
+    }
 }
