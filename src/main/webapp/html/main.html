@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="application/javascript" src="js/bootstrap.min.js"></script>
+
+
+    <script type="application/javascript" src="js/jquery-jtemplates.js"></script>
+    <script type="application/javascript" src="js/jquerySession.js"></script>
+    <!--<script type="application/javascript" src="js/users/getUser.js"></script>-->
+    <script type="application/javascript" src="js/nav/nav.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <script type="application/javascript" src="js/moment-with-locales.min.js"></script>
+    <script type="application/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+    <script type="application/javascript" src="js/date/datetimePicker.js"></script>
+
+
+
+
+    <script type="application/javascript" src="js/invigilates/getInvigilates.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/xcConfirm.css"/>
+    <script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+    <script type="application/javascript" src="js/invigilates/add.js"></script>
+
+    <script type="application/javascript" src="js/page/pagelab.js"></script>
+    <script type="application/javascript" src="js/invigilates/search.js"></script>
+
+    <script type="application/javascript" src="js/invigilates/buy.js"> </script>
+
+
+
+
+    <style>
+        body {
+            font-family: 'microsoft yahei', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav navbar-default" role="navigation" >
+        <div class="container-fluid"><!--流布局 -->
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">
+                    <img src="img/logo1.png" style="height: 50px; width: 300px; margin-top: -15px">
+                </a>
+            </div>
+
+            <div class="navbar-form navbar-right">
+                <button class="btn btn-link" type="button" id="btn-logout">
+                    退出登录
+                </button>
+            </div>
+
+            <div class="navbar-form navbar-right">
+                <div class="dropdown" >
+                    <button class="btn btn-link dropdown-toggle" type="button" id="dp1" data-toggle="dropdown"
+                            aria-expanded="true" aria-haspopup="true" >
+                        个人中心
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu"  aria-labelledby="dp1">
+                        <li><a href="./mySell.html">我的拍卖</a></li>
+                        <li><a href="./myBuy.html">我的购买</a></li>
+                        <li><a href="./updatePassword.html" >修改密码</a></li>
+                        <!--<li role="separator" class="divider"></li>&lt;!&ndash; 分割线 &ndash;&gt;-->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="navbar-form navbar-right">
+                <button class="btn btn-danger" type="button" id="btn-addInvigilate" >
+                    发布监考
+                </button>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="./main.html">首页</a></li>
+                <!--<li role="presentation"><a href="#">我的信息<span class="badge">3</span></a></li>-->
+            </ul>
+        </div>
+    </nav>
+
+    <div style="height: 30px"></div>
+
+    <div class="container" >
+        <div class="col-lg-3">
+
+            <div style="height: 30px"></div>
+
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="根据学校名查询" id="searchText-school">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="searchbtn-searchBySchool">Go!</button>
+                 </span>
+            </div>
+
+            <div style="height: 50px"></div>
+
+            <div class='input-group date' id="search-datetimepicker">
+                <input type="text" class="form-control" id="searchText-datetime" placeholder="根据日期查询" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar" id="searchbtn-datetime"></span>
+                </span>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="searchbtn-searchByDate">Go!</button>
+                 </span>
+            </div>
+
+
+        </div>
+        <div class="col-lg-8">
+
+
+
+
+            <div style="height: 15px"></div>
+            <div id="result"></div>
+            <textarea id="template" style="display: none" >
+                <div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>学校</th>
+                                <th>地址</th>
+                                <th>时间</th>
+                                <th>科目</th>
+                                <th>价格</th>
+                                <th>卖家</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#foreach $T.table as record}
+                            <tr>
+                                <td>{$T.record.school}</td>
+                                <td>{$T.record.address}</td>
+                                <td>{$T.record.datetime}</td>
+                                <td>{$T.record.subject}</td>
+                                <td>{$T.record.price}</td>
+                                <td>{$T.record.seller}</td>
+                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" id="btn-buy" >购买此监考</button>
+                                    <span  style="display: none" class="span_id">{$T.record._id}</span>
+                                </td>
+                            </tr>
+                            {#/for}
+                        </tbody>
+                    </table>
+                </div>
+            </textarea>
+
+            <div class="row">
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-6">
+                    <ul class="pagination">
+                        <li><a href="#" id="pagebtn-last" >&laquo;</a></li>
+                        <li><a href="#" class="page-pageNo">1</a></li>
+                        <li><a href="#" class="page-pageNo">2</a></li>
+                        <li><a href="#" class="page-pageNo">3</a></li>
+                        <li><a href="#" class="page-pageNo">4</a></li>
+                        <li><a href="#" class="page-pageNo">5</a></li>
+                        <li><a href="#" id="pagebtn-next" value="6">&raquo;</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+
+        </div>
+    </div>
+
+
+
+
+    <div class="modal fade" id="modal-addInvigilate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">发布监考</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>学校</label>
+                        <input type="text" class="form-control" id="addText-school" placeholder="学校">
+                    </div>
+                    <div class="form-group">
+                        <label>具体地址</label>
+                        <input type="text"  class="form-control" id="addText-address" placeholder="具体地址">
+                    </div>
+                    <div class="form-group">
+                        <label>监考科目</label>
+                        <input type="text"  class="form-control" id="addText-subject" placeholder="监考科目">
+                    </div>
+                    <div class="form-group">
+                        <label>日期时间</label>
+                        <div class='input-group date' id="add-datetimepicker">
+                            <input type="text" class="form-control" id="addText-datetime" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar" id="addbtn-datetime"></span>
+                            </span>
+                        </div>
+                        <!--<input type="text"  class="form-control" id="addText-datetime" placeholder="日期时间">-->
+                    </div>
+                    <div class="form-group">
+                        <label >价格</label>
+                        <input type="text"  class="form-control" id="addText-price" placeholder="价格">
+                    </div>
+                    <div class="form-group">
+                        <label >备注</label>
+                        <input type="text"  class="form-control" id="addText-content" placeholder="您的联系方式,注意事项等">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                    <button type="button" id="btn-submitAddInvigilate" class="btn btn-danger" >
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

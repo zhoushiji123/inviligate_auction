@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="application/javascript" src="js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <script type="application/javascript" src="js/moment-with-locales.min.js"></script>
+    <script type="application/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+
+    <script type="application/javascript">
+        $(function () {
+            $('#c1').click(function () {
+                $('#datetimepicker1').datetimepicker({
+                    format: 'yyyy-mm-dd hh:ii:00',
+                    locale: moment.locale('zh-cn')
+                });
+            });
+
+            $('#datetimepicker2').datetimepicker({
+                format: 'yyyy-mm-dd',
+                locale: moment.locale('zh-cn'),
+                minView: "month"
+            });
+        });
+    </script>
+
+</head>
+<body>
+<div class="row">
+    <div class='col-sm-6'>
+        <div class="form-group">
+            <label>选择日期：</label>
+            <!--指定 date标记-->
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar" id="c1"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class='col-sm-6'>
+        <div class="form-group">
+            <label>选择日期+时间：</label>
+            <!--指定 date标记-->
+            <div class='input-group date' id='datetimepicker2'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar" id="c2"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

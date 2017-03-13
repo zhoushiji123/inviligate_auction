@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="application/javascript" src="js/bootstrap.min.js"></script>
+    <script type="application/javascript" src="js/jquery-jtemplates.js"></script>
+
+    <style type="text/css">
+        .container{
+            width: 1000px;
+            height: 600px;
+            margin: 0 auto;
+        }
+        .template{
+            display: none;
+        }
+        table{
+            background-color: #fff;
+        }
+        table tr th{
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        table tr td{
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+
+
+
+    <script type="text/javascript">
+    $(function(){
+    // 初始化JSON数据
+    var data = {
+    "name" : "网马伦",
+    "list_id" : 89757,
+    "table":[
+    {"id": 1, "name": "Rain", "age": 22, "mail": "admin@domain.com"},
+    {"id": 2, "name": "皮特", "age": 24, "mail": "123456@domain.com"},
+    {"id": 3, "name": "卡卡", "age": 20, "mail": "112233@domain.com"},
+    {"id": 4, "name": "戏戏", "age": 26, "mail": "0147@domain.com"},
+    {"id": 5, "name": "一揪", "age": 25, "mail": "kkw@domain.com"}
+    ]
+    };
+
+    // 设置模板
+    $("#result").setTemplateElement("template");
+    // 给模板加载数据
+    $("#result").processTemplate(data);
+    });
+    </script>
+
+    <style>
+        body {
+            font-family: 'microsoft yahei', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div><h1>标题</h1></div>
+    <div id="result"></div>
+    <textarea id="template" class="template">
+            <div><strong>部门编号：{$T.list_id}</strong></div>
+            <div><strong>负责人：{$T.name} </strong></div>
+            <div>
+                <table>
+                    <tr>
+                        <th>编号</th>
+                        <th>姓名</th>
+                        <th>年龄</th>
+                        <th>邮箱</th>
+                    </tr>
+                    {#foreach $T.table as record}
+                    <tr>
+                        <td>{$T.record.id}</td>
+                        <td>{$T.record.name}</td>
+                        <td>{$T.record.age}</td>
+                        <td>{$T.record.mail}</td>
+                    </tr>
+                    {#/for}
+                </table>
+            </div>
+        </textarea>
+
+
+</div>
+</body>
+</html>
