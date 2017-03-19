@@ -16,7 +16,7 @@ $(function () {
         if(confirm("确定要删除吗??")){
             _id = $(obj).next('.span_id').text();
             $.ajax({
-                url: "http://127.0.0.1:8080/zsj/invigilate/delete.htm",
+                url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/delete.htm",
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 dataType: 'json',
@@ -96,7 +96,7 @@ $(function () {
 
 
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/update.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/update.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -125,7 +125,7 @@ $(function () {
 
     function getMySellIvg() {
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilates.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilates.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',

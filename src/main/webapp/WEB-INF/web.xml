@@ -10,7 +10,7 @@
          metadata-complete="true">
 
     <welcome-file-list>
-        <welcome-file>/html/index.html</welcome-file>
+        <welcome-file>html/index.html</welcome-file>
     </welcome-file-list>
 
     <display-name>Archetype Created Web Application</display-name>

@@ -15,7 +15,7 @@ $(function () {
         if(confirm("确定要放弃吗??")){
             _id = $(obj).next('.span_id').text();
             $.ajax({
-                url: "http://127.0.0.1:8080/zsj/invigilate/giveup.htm",
+                url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/giveup.htm",
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 dataType: 'json',
@@ -52,7 +52,7 @@ $(function () {
         if(confirm("确定完成了吗??")){
             _id = $(obj).next('.span_id').text();
             $.ajax({
-                url: "http://127.0.0.1:8080/zsj/invigilate/finish.htm",
+                url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/finish.htm",
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 dataType: 'json',
@@ -78,7 +78,7 @@ $(function () {
 
     function  getMyBuy() {
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilates.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilates.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',

@@ -34,7 +34,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url:"http://127.0.0.1:8080/zsj/user/register.htm",
+            url:"http://123.206.219.49:8080/inviligate_auction/zsj/user/register.htm",
             data:JSON.stringify({
                 "collectionName":"users",
                 "username":username,
