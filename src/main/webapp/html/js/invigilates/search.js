@@ -11,7 +11,7 @@ $(function () {
         }
 
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilates.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilates.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -51,7 +51,7 @@ $(function () {
         }
 
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilatesByDate.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilatesByDate.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -84,6 +84,12 @@ $(function () {
 
 
     function  buy(obj) {
+        var userstr = $.session.get('user');
+        if(!userstr){
+            alert("请先登录！！！");
+            window.location.href = './index.html';
+            return false;
+        }
         // alert("buy");
         var _id = $(obj).next('.span_id').text();
         // alert(_id);
@@ -95,7 +101,7 @@ $(function () {
         var username = JSON.parse($.session.get('user')).username;
        // alert(username);
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/buy.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/buy.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -108,7 +114,7 @@ $(function () {
                 if(res.success == true){
                     window.wxc.xcConfirm("购买成功", window.wxc.xcConfirm.typeEnum.success);
                     $.ajax({
-                        url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilates.htm",
+                        url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilates.htm",
                         type: "POST",
                         contentType: "application/json;charset=utf-8",
                         dataType: 'json',

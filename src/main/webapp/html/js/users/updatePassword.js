@@ -5,6 +5,14 @@
 $(function () {
 
     function updatePassword() {
+
+        var userstr = $.session.get('user');
+        if(!userstr){
+            alert("请先登录！！！");
+            window.location.href = './index.html';
+            return false;
+        }
+
         var lastPassword = $('#update-password').val();
         var newPassword = $('#update-newPassword').val();
         var surePassword = $('#update-newSurePassword').val();
@@ -31,7 +39,7 @@ $(function () {
         }
 
         $.ajax({
-            url:"http://127.0.0.1:8080/zsj/user/updatePassword.htm",
+            url:"http://123.206.219.49:8080/inviligate_auction/zsj/user/updatePassword.htm",
             type:"POST",
             type:'POST',
             contentType : "application/json;charset=utf-8",

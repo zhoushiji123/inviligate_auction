@@ -9,6 +9,14 @@ var pageSize =8 ;
 $(function () {
 
     function  buy(obj) {
+
+        var userstr = $.session.get('user');
+        if(!userstr){
+            alert("请先登录！！！");
+            window.location.href = './index.html';
+            return false;
+        }
+
         //alert("buy");
         var _id = $(obj).next('.span_id').text();
         //alert(_id);
@@ -20,7 +28,7 @@ $(function () {
         var username = JSON.parse($.session.get('user')).username;
         alert(username);
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/buy.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/buy.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -33,7 +41,7 @@ $(function () {
                 if(res.success == true){
                     window.wxc.xcConfirm("购买成功", window.wxc.xcConfirm.typeEnum.success);
                     $.ajax({
-                        url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilates.htm",
+                        url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilates.htm",
                         type: "POST",
                         contentType: "application/json;charset=utf-8",
                         dataType: 'json',
@@ -78,7 +86,7 @@ $(function () {
         current_page = parseInt($(obj).text());
       //  alert(current_page);
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilates.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilates.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -118,7 +126,7 @@ $(function () {
         current_page = current_page - 1;
       //  alert(current_page);
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilates.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilates.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -153,7 +161,7 @@ $(function () {
         current_page = current_page +1 ;
         //alert(current_page);
         $.ajax({
-            url: "http://127.0.0.1:8080/zsj/invigilate/getInvigilates.htm",
+            url: "http://123.206.219.49:8080/inviligate_auction/zsj/invigilate/getInvigilates.htm",
             type: "POST",
             contentType: "application/json;charset=utf-8",
             dataType: 'json',

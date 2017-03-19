@@ -18,7 +18,23 @@ $(function () {
     });
 
     $('#btn-addInvigilate').click(function () {
+        var userstr = $.session.get('user');
+        if(!userstr){
+            alert("请先登录！！！");
+            window.location.href = './index.html';
+            return false;
+        }
         $('#modal-addInvigilate').modal();
+    });
+
+    $('#dp1').click(function(){
+        var userstr = $.session.get('user');
+        if(!userstr){
+            alert("请先登录！！！");
+            window.location.href = './index.html';
+            return false;
+        }
+        return true ;
     });
 
 });
