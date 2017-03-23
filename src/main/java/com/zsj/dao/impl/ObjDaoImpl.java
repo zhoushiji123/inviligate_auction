@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * Created by zsj on 2017/2/21.
  */
-public  abstract class ObjDaoImpl  implements ObjDao {
+public  class ObjDaoImpl  implements ObjDao {
 
     @Autowired
     public MongoTemplate mongoTemplate;
