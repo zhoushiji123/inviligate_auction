@@ -18,14 +18,10 @@ import java.util.Arrays;
 @Component
 @Aspect
 public class LogAspect {
-
-
     private Logger logger = Logger.getLogger(this.getClass());
-
 
     @Pointcut("execution(* com.zsj.service.*.*(..) )")
     public void point(){
-
     }
 
     @Around("point()")
@@ -34,18 +30,12 @@ public class LogAspect {
             String method = proceedingJoinPoint.getSignature().getName();
             JSONObject param = (JSONObject)(proceedingJoinPoint.getArgs()[0]);
             logger.debug("接口"+method+"--传入参数："+param.toJSONString());
-
             Object res = (proceedingJoinPoint.proceed());
             logger.debug("接口"+method+"--返回结果："+res);
-
             return  res;
         }catch (Throwable t){
             t.printStackTrace();
         }
         return null;
     }
-
-
-
-
 }
