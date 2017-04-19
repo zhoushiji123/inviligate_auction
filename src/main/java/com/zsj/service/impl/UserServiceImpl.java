@@ -59,16 +59,17 @@ public class UserServiceImpl implements UserService {
         PageModel<JSONObject> pageModel = userDao.findByTerm(obj);
         if(pageModel.getCount() == 0){
             pageModel.setMessage("用户名或者密码错误");
+            pageModel.setSuccess(false);
         }else{
             //登录成功 获取token并插入一条认证记录
-            JSONObject user = pageModel.getData().get(0);
-            String username = user.getString("username");
-            String token = MD5.getMD5(username);
-            JSONObject param = new JSONObject();
-            param.put("collectionName",AuthDao.auth);
-            param.put("username",username);
-            param.put("token",token);
-            authDao.insert(param);
+//            JSONObject user = pageModel.getData().get(0);
+//            String username = user.getString("username");
+//            String token = MD5.getMD5(username);
+//            JSONObject param = new JSONObject();
+//            param.put("collectionName",AuthDao.auth);
+//            param.put("username",username);
+//            param.put("token",token);
+//            authDao.insert(param);
         }
         return pageModel;
     }

@@ -92,7 +92,7 @@ $(function () {
         }
 
 
-        updateParam.state = "待审核";
+        updateParam.state = "竞拍中";
 
 
         $.ajax({
@@ -107,7 +107,7 @@ $(function () {
             }),
             success: function (res) {
                 if(res.success == true){
-                    window.wxc.xcConfirm("修改成功,待管理员审核之后,监考会重新发布到主页面", window.wxc.xcConfirm.typeEnum.success);
+                    window.wxc.xcConfirm("修改成功", window.wxc.xcConfirm.typeEnum.success);
                     $('#modal-updateInvigilate').modal('hide');
 
                     getMySellIvg();
@@ -117,9 +117,38 @@ $(function () {
                 alert("出错了：" + errorThrown);
             }
         });
+    }
 
+    function endAuction(obj) {
+        var ivg_id = $(obj).next('.span_id').text();
+        var state = $(obj).prev('.span_state').text();
 
+        if(state!='竞拍中'){
+            window.wxc.xcConfirm("只有竞拍中的监考才能进行此操作！", window.wxc.xcConfirm.typeEnum.error);
+            return false;
+        }
 
+        if(confirm("确定要结束拍卖吗，结束后监考会属于最后一次竞拍的人!")){
+            $.ajax({
+                url: "http://123.206.219.49:8080/inviligate_auction/zsj/auction/endAuction.htm",
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: 'json',
+                async: false,
+                data: JSON.stringify({
+                    "invigilate_id":ivg_id
+                }),
+                success: function (res) {
+                    if(res.success == true){
+                        window.wxc.xcConfirm("操作成功", window.wxc.xcConfirm.typeEnum.success);
+                        getMySellIvg();
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("出错了：" + errorThrown);
+                }
+            });
+        }
 
     }
 
@@ -151,6 +180,10 @@ $(function () {
                     del(this);
                 });
 
+                $('td').on('click','#btnMySell-endAuction',function () {
+                    endAuction(this);
+                });
+
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("出错了：" + errorThrown);
@@ -158,6 +191,9 @@ $(function () {
 
         });
     }
+
+
+
 
     getMySellIvg();
 

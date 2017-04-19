@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拍卖结果信息</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script>
+    <script type="application/javascript" src="js/bootstrap.min.js"></script>
+
+    <script type="application/javascript" src="js/jquery-jtemplates.js"></script>
+    <script type="application/javascript" src="js/jquerySession.js"></script>
+    <script type="application/javascript" src="js/nav/nav.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/xcConfirm.css"/>
+    <script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+    <script type="application/javascript" src="js/invigilates/adminAuction.js"></script>
+
+    <style>
+        body {
+            font-family: 'microsoft yahei', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+
+</head>
+<body>
+<nav class="nav navbar-default" role="navigation" >
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="#" class="navbar-brand">
+                <img src="img/logo1.png" style="height: 50px; width: 300px; margin-top: -15px">
+            </a>
+        </div>
+
+        <div class="navbar-form navbar-right">
+            <button class="btn btn-link" type="button" id="btn-logout">
+                退出登录
+            </button>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="./adminAuctionMessage.html"><span class="text-danger">拍卖结果信息</span></a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="./admin.html">首页</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div style="height: 5px"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div style="height: 15px"></div>
+            <div id="result"></div>
+            <textarea id="template" style="display: none" >
+                <div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>拍卖结果</th>
+                                <th>时间</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#foreach $T.table as record}
+                            <tr>
+                                <td>{$T.record.message}</td>
+                                <td>{$T.record.date_time}</td>
+                                <td>
+                                     <button type="button" class="btn btn-success" id="btnAdminAuction-del" >删除记录</button>
+                                     <span  style="display: none" class="span_id">{$T.record._id}</span>
+                                </td>
+                            </tr>
+                            {#/for}
+                        </tbody>
+                    </table>
+                </div>
+            </textarea>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+</div>
+
+
+</body>
+</html>

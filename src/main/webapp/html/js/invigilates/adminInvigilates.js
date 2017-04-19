@@ -53,7 +53,7 @@ $(function () {
             async: false,
             data: JSON.stringify({
                 "queryParam":{"_id":_id},
-                "updateParam":{"state":"未拍下"}
+                "updateParam":{"state":"竞拍中"}
             }),
             success: function (res) {
                 if(res.success == true){
@@ -93,10 +93,6 @@ $(function () {
             }
         });
     }
-
-
-
-
 
     getInvigilates();
 

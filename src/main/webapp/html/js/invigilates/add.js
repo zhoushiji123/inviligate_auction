@@ -5,13 +5,6 @@
 $(function () {
 
     function  buy(obj) {
-        var userstr = $.session.get('user');
-        if(!userstr){
-            alert("请先登录！！！");
-            window.location.href = './index.html';
-            return false;
-        }
-
      //   alert("buy");
         var _id = $(obj).next('.span_id').text();
      //   alert(_id);
@@ -29,8 +22,8 @@ $(function () {
             dataType: 'json',
             async: false,
             data: JSON.stringify({
-                "queryParam":{"_id":_id},
-                "updateParam":{"buyer":username,"state":"未完成"}
+                "_id":_id,
+                "buyer":username
             }),
             success: function (res) {
                 if(res.success == true){
@@ -44,7 +37,7 @@ $(function () {
                         data: JSON.stringify({
                             "pageIndex": 1,
                             "pageSize": 8,
-                            "state":"未拍下",
+                            "state":"竞拍中",
                             "datetime":"1"  //获得当前时间 之后的
                         }),
                         success: function (res) {
@@ -55,6 +48,9 @@ $(function () {
                             // 给模板加载数据
                             $("#result").processTemplate(tabledata);
 
+                            $('td').on('click','#btn-auction',function () {
+                                take_part_in_auction(this);
+                            });
                             $('td').on('click','#btn-buy',function () {
                                 buy(this);
                             });
@@ -87,7 +83,7 @@ $(function () {
             data: JSON.stringify({
                 "pageIndex": 1,
                 "pageSize": 8,
-                "state":"未拍下",
+                "state":"竞拍中",
                 "datetime":"1"  //获得当前时间 之后的
             }),
             success: function (res) {
@@ -100,6 +96,9 @@ $(function () {
 
                 $('td').on('click','#btn-buy',function () {
                     buy(this);
+                });
+                $('td').on('click','#btn-auction',function () {
+                    take_part_in_auction(this);
                 });
 
             },
@@ -117,12 +116,13 @@ $(function () {
         var school = $('#addText-school').val();
         var address  = $('#addText-address').val();
         var price = $('#addText-price').val();
+        var current_price = $('#addText-current_price').val();
         var subject = $('#addText-subject').val();
         var content = $('#addText-content').val();
 
         var datetime = $('#addText-datetime').val();
 
-        if(school == '' || address == '' || price == '' || subject == '' || datetime == '' ){
+        if(school == '' || address == '' || price == '' || subject == '' || datetime == '' || current_price == '' ){
             var txt=  "除了备注,不能有空值";
             window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
             return false;
@@ -140,6 +140,7 @@ $(function () {
                 "price":price,
                 "subject":subject,
                 "datetime":datetime,
+                "current_price":current_price,
                 "content":content,
                 "seller":JSON.parse($.session.get('user')).username,
                 "state":"待审核",
@@ -170,5 +171,17 @@ $(function () {
     $('#btn-submitAddInvigilate').click(function () {
         addInvigilate();
     });
+
+    function take_part_in_auction(obj) {
+        var ivg_id = $(obj).prev('.span_id').text();
+        $.session.set('ivg_id',ivg_id);
+        $('#modal-auction').modal();
+    }
+
+    $('td').on('click','#btn-auction',function () {
+        take_part_in_auction(this);
+    });
+
+
 
 });

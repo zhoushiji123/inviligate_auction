@@ -9,10 +9,7 @@
 
     <script type="application/javascript" src="js/jquery-jtemplates.js"></script>
     <script type="application/javascript" src="js/jquerySession.js"></script>
-    <!--<script type="application/javascript" src="js/users/getUser.js"></script>-->
     <script type="application/javascript" src="js/nav/nav.js"></script>
-
-
     <link rel="stylesheet" type="text/css" href="css/xcConfirm.css"/>
     <script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
 
@@ -31,7 +28,7 @@
 </head>
 <body>
     <nav class="nav navbar-default" role="navigation" >
-        <div class="container-fluid"><!--流布局 -->
+        <div class="container-fluid">
             <div class="navbar-header">
                 <a href="#" class="navbar-brand">
                     <img src="img/logo1.png" style="height: 50px; width: 300px; margin-top: -15px">
@@ -44,31 +41,12 @@
                 </button>
             </div>
 
-            <!--<div class="navbar-form navbar-right">-->
-                <!--<div class="dropdown" >-->
-                    <!--<button class="btn btn-link dropdown-toggle" type="button" id="dp1" data-toggle="dropdown"-->
-                            <!--aria-expanded="true" aria-haspopup="true" >-->
-                        <!--个人中心-->
-                        <!--<span class="caret"></span>-->
-                    <!--</button>-->
-                    <!--<ul class="dropdown-menu"  aria-labelledby="dp1">-->
-                        <!--<li><a href="#">我的拍卖</a></li>-->
-                        <!--<li><a href="#">我的监考</a></li>-->
-                        <!--<li><a href="./updatePassword.html" >修改密码</a></li>-->
-                        <!--&lt;!&ndash;<li role="separator" class="divider"></li>&lt;!&ndash; 分割线 &ndash;&gt;&ndash;&gt;-->
-                    <!--</ul>-->
-                <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="navbar-form navbar-right">-->
-                <!--<button class="btn btn-danger" type="button" id="btn-addInvigilate" >-->
-                    <!--发布监考-->
-                <!--</button>-->
-            <!--</div>-->
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="./adminAuctionMessage.html"><span class="text-danger">拍卖结果信息</span></a></li>
+            </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="./admin.html">首页</a></li>
-                <!--<li role="presentation"><a href="#">我的信息<span class="badge">3</span></a></li>-->
             </ul>
         </div>
     </nav>
@@ -90,8 +68,10 @@
                                 <th>地址</th>
                                 <th>时间</th>
                                 <th>科目</th>
-                                <th>价格</th>
+                                <th>一口价</th>
+                                <th>初始价格</th>
                                 <th>卖家</th>
+                                <th>备注</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -104,7 +84,9 @@
                                 <td>{$T.record.datetime}</td>
                                 <td>{$T.record.subject}</td>
                                 <td>{$T.record.price}</td>
+                                <td>{$T.record.current_price}</td>
                                 <td>{$T.record.seller}</td>
+                                <td>{$T.record.content}</td>
                                 <td>
                                      <button type="button" class="btn btn-success" id="btnAdmin-approve" >批准</button>
                                      <span  style="display: none" class="span_id">{$T.record._id}</span>

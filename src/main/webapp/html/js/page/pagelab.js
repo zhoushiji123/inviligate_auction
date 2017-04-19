@@ -9,14 +9,12 @@ var pageSize =8 ;
 $(function () {
 
     function  buy(obj) {
-
         var userstr = $.session.get('user');
         if(!userstr){
             alert("请先登录！！！");
             window.location.href = './index.html';
             return false;
         }
-
         //alert("buy");
         var _id = $(obj).next('.span_id').text();
         //alert(_id);
@@ -34,8 +32,8 @@ $(function () {
             dataType: 'json',
             async: false,
             data: JSON.stringify({
-                "queryParam":{"_id":_id},
-                "updateParam":{"buyer":username,"state":"未完成"}
+                "_id":_id,
+                "buyer":username
             }),
             success: function (res) {
                 if(res.success == true){
@@ -49,7 +47,7 @@ $(function () {
                         data: JSON.stringify({
                             "pageIndex": 1,
                             "pageSize": 8,
-                            "state":"未拍下",
+                            "state":"竞拍中",
                             "datetime":"1"  //获得当前时间 之后的
                         }),
                         success: function (res) {
@@ -62,6 +60,9 @@ $(function () {
 
                             $('td').on('click','#btn-buy',function () {
                                 buy(this);
+                            });
+                            $('td').on('click','#btn-auction',function () {
+                                take_part_in_auction(this);
                             });
 
                         },
@@ -94,7 +95,7 @@ $(function () {
             data: JSON.stringify({
                 "pageIndex": current_page,
                 "pageSize": 8,
-                "state":"未拍下",
+                "state":"竞拍中",
                 "datetime":"1"  //获得当前时间 之后的
             }),
             success: function (res) {
@@ -107,6 +108,9 @@ $(function () {
 
                 $('td').on('click','#btn-buy',function () {
                     buy(this);
+                });
+                $('td').on('click','#btn-auction',function () {
+                    take_part_in_auction(this);
                 });
 
             },
@@ -134,7 +138,7 @@ $(function () {
             data: JSON.stringify({
                 "pageIndex": current_page,
                 "pageSize": 8,
-                "state":"未拍下",
+                "state":"竞拍中",
                 "datetime":"1"  //获得当前时间 之后的
             }),
             success: function (res) {
@@ -147,6 +151,9 @@ $(function () {
 
                 $('td').on('click','#btn-buy',function () {
                     buy(this);
+                });
+                $('td').on('click','#btn-auction',function () {
+                    take_part_in_auction(this);
                 });
 
             },
@@ -169,7 +176,7 @@ $(function () {
             data: JSON.stringify({
                 "pageIndex": current_page,
                 "pageSize": 8,
-                "state":"未拍下",
+                "state":"竞拍中",
                 "datetime":"1"  //获得当前时间 之后的
             }),
             success: function (res) {
@@ -183,6 +190,9 @@ $(function () {
                 $('td').on('click','#btn-buy',function () {
                     buy(this);
                 });
+                $('td').on('click','#btn-auction',function () {
+                    take_part_in_auction(this);
+                });
 
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -191,6 +201,18 @@ $(function () {
 
         });
     }
+
+    function take_part_in_auction(obj) {
+        var ivg_id = $(obj).prev('.span_id').text();
+        $.session.set('ivg_id',ivg_id);
+        $('#modal-auction').modal();
+    }
+
+
+    $('td').on('click','#btn-auction',function () {
+        take_part_in_auction(this);
+    });
+
 
     $('#pagebtn-last').click(function () {
         last();

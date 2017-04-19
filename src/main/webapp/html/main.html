@@ -31,8 +31,7 @@
     <script type="application/javascript" src="js/invigilates/search.js"></script>
 
     <script type="application/javascript" src="js/invigilates/buy.js"> </script>
-
-
+    <script type="application/javascript" src="js/invigilates/auction.js"></script>
 
 
     <style>
@@ -66,6 +65,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu"  aria-labelledby="dp1">
+                        <li><a href="./myAuction.html">我参与的竞拍</a></li>
                         <li><a href="./mySell.html">我的拍卖</a></li>
                         <li><a href="./myBuy.html">我的购买</a></li>
                         <li><a href="./updatePassword.html" >修改密码</a></li>
@@ -103,6 +103,14 @@
 
             <div style="height: 50px"></div>
 
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="根据监考编号查询" id="searchText-id">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="searchbtn-searchById">Go!</button>
+                 </span>
+            </div>
+            <div style="height: 50px"></div>
+
             <div class='input-group date' id="search-datetimepicker">
                 <input type="text" class="form-control" id="searchText-datetime" placeholder="根据日期查询" />
                 <span class="input-group-addon">
@@ -115,11 +123,7 @@
 
 
         </div>
-        <div class="col-lg-8">
-
-
-
-
+        <div class="col-lg-9">
             <div style="height: 15px"></div>
             <div id="result"></div>
             <textarea id="template" style="display: none" >
@@ -131,8 +135,11 @@
                                 <th>地址</th>
                                 <th>时间</th>
                                 <th>科目</th>
-                                <th>价格</th>
+                                <th>一口价</th>
+                                <th>当前价格</th>
                                 <th>卖家</th>
+                                <th>竞拍领先者</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -144,11 +151,19 @@
                                 <td>{$T.record.datetime}</td>
                                 <td>{$T.record.subject}</td>
                                 <td>{$T.record.price}</td>
-                                <td>{$T.record.seller}</td>
-                                <td></td>
+                                <td><span class="text-danger">{$T.record.current_price}</span></td>
+                                <td><span class="text-danger">{$T.record.seller}</span></td>
+                                <td>{$T.record.buyer}</td>
+                                <!--<td></td>-->
                                 <td>
-                                    <button type="button" class="btn btn-primary" id="btn-buy" >购买此监考</button>
+                                    <span  style="display: none" class="span_state">{$T.record._state}</span>
+                                    <button type="button" class="btn btn-info" id="btn-buy" >一口价购买</button>
                                     <span  style="display: none" class="span_id">{$T.record._id}</span>
+                                </td>
+                                <td>
+                                    <span  style="display: none" class="span_id">{$T.record._id}</span>
+                                    <button type="button" class="btn btn-success" id="btn-auction" >竞拍价格</button>
+                                    <span  style="display: none" class="span_state">{$T.record._state}</span>
                                 </td>
                             </tr>
                             {#/for}
@@ -177,9 +192,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-1">
 
-        </div>
+        <!--<div class="col-lg-1">-->
+        <!--</div>-->
+
     </div>
 
 
@@ -217,8 +233,12 @@
                         <!--<input type="text"  class="form-control" id="addText-datetime" placeholder="日期时间">-->
                     </div>
                     <div class="form-group">
-                        <label >价格</label>
+                        <label >一口价</label>
                         <input type="text"  class="form-control" id="addText-price" placeholder="价格">
+                    </div>
+                    <div class="form-group">
+                        <label >初始价格</label>
+                        <input type="text"  class="form-control" id="addText-current_price" placeholder="初始价格">
                     </div>
                     <div class="form-group">
                         <label >备注</label>
@@ -228,7 +248,30 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
                     <button type="button" id="btn-submitAddInvigilate" class="btn btn-danger" >
-                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>提交
+                        提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modal-auction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel2">竞拍价格</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>价格</label>
+                        <input type="text" class="form-control" id="auction-price" placeholder="价格">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-submitAuction" class="btn btn-danger" >
+                        提交
                     </button>
                 </div>
             </div>

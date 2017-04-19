@@ -49,20 +49,20 @@
         <mvc:mapping path="/**" />
     </mvc:cors>
 
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <!--
-                /**的意思是所有文件夹及里面的子文件夹
-                /*是所有文件夹，不含子文件夹
-                /是web项目的根目录
-              -->
-            <mvc:mapping path="/**" />
-            <!-- 需排除拦截的地址 -->
-            <mvc:exclude-mapping path="/zsj/user/register.htm"/>
-            <mvc:exclude-mapping path="/zsj/user/login.htm"/>
-            <bean id="authInterceptor" class="com.zsj.interceptors.AuthInterceptor"></bean> <!--这个类就是我们自定义的Interceptor -->
-        </mvc:interceptor>
-        <!-- 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法  -->
-    </mvc:interceptors>
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--&lt;!&ndash;-->
+                <!--/**的意思是所有文件夹及里面的子文件夹-->
+                <!--/*是所有文件夹，不含子文件夹-->
+                <!--/是web项目的根目录-->
+              <!--&ndash;&gt;-->
+            <!--<mvc:mapping path="/**" />-->
+            <!--&lt;!&ndash; 需排除拦截的地址 &ndash;&gt;-->
+            <!--<mvc:exclude-mapping path="/zsj/user/register.htm"/>-->
+            <!--<mvc:exclude-mapping path="/zsj/user/login.htm"/>-->
+            <!--<bean id="authInterceptor" class="com.zsj.interceptors.AuthInterceptor"></bean> &lt;!&ndash;这个类就是我们自定义的Interceptor &ndash;&gt;-->
+        <!--</mvc:interceptor>-->
+        <!--&lt;!&ndash; 当设置多个拦截器时，先按顺序调用preHandle方法，然后逆序调用每个拦截器的postHandle和afterCompletion方法  &ndash;&gt;-->
+    <!--</mvc:interceptors>-->
 
 </beans>

@@ -14,7 +14,7 @@ $(function () {
             data: JSON.stringify({
                 "pageIndex": 1,
                 "pageSize": 8,
-                "state":"未拍下",
+                "state":"竞拍中",
                 "datetime":"1"  //获得当前时间 之后的
             }),
             success: function (res) {
@@ -32,34 +32,6 @@ $(function () {
 
         });
     }
-
-        // var data = {
-        //     "table":[
-        //         {"school": "浙江大学", "address": "科技楼202" ,"datetime": "2017-03-06 10:00:00", "subject":"数学",
-        //             "price": 100, "seller": "zsj"},
-        //         {"school": "浙江大学城市学院", "address": "理科4号楼,310" ,"datetime": "2017-03-07 11:00:00","subject":"英语",
-        //             "price": 150, "seller": "傻逼"},
-        //         {"school": "浙江大学城市学院", "address": "理科4号楼,310" ,"datetime": "2017-03-07 11:00:00","subject":"英语",
-        //             "price": 150, "seller": "傻逼"},
-        //         {"school": "浙江大学城市学院", "address": "理科4号楼,310" ,"datetime": "2017-03-07 11:00:00","subject":"英语",
-        //             "price": 150, "seller": "傻逼"},
-        //         {"school": "浙江大学城市学院", "address": "理科4号楼,310" ,"datetime": "2017-03-07 11:00:00","subject":"英语",
-        //             "price": 150, "seller": "傻逼"},
-        //         {"school": "浙江大学城市学院", "address": "理科4号楼,310" ,"datetime": "2017-03-07 11:00:00","subject":"英语",
-        //             "price": 150, "seller": "傻逼"},
-        //         {"school": "浙江大学城市学院", "address": "理科4号楼,310" ,"datetime": "2017-03-07 11:00:00","subject":"英语",
-        //             "price": 150, "seller": "傻逼"},
-        //         {"school": "浙江大学城市学院", "address": "理科4号楼,310" ,"datetime": "2017-03-07 11:00:00","subject":"英语",
-        //             "price": 150, "seller": "傻逼"},
-        //
-        //     ]
-        // };
-
-        // $("#result").setTemplateElement("template");
-        // // 给模板加载数据
-        // $("#result").processTemplate(data);
-
-
 
     getIngivilates();
 

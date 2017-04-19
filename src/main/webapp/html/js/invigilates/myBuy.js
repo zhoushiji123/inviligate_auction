@@ -35,7 +35,6 @@ $(function () {
                 }
             });
         }
-
     }
 
 
@@ -44,6 +43,10 @@ $(function () {
         var state = $(obj).prev('.span_state').text();
         if(state == '已完成'){
             window.wxc.xcConfirm("该监考已经完成", window.wxc.xcConfirm.typeEnum.warning);
+            return false;
+        }
+        if(state == '竞拍中'){
+            window.wxc.xcConfirm("该监考还在竞拍中", window.wxc.xcConfirm.typeEnum.warning);
             return false;
         }
 

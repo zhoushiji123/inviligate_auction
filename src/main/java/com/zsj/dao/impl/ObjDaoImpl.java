@@ -38,13 +38,11 @@ public  class ObjDaoImpl  implements ObjDao {
             pageSize = 100;
             pageIndex = 1;
         }
-
         collectionName = obj.getString("collectionName");
         PageModel<JSONObject> pageModel = new PageModel();
 
 //        Criteria criteria ;
 //        criteria = Criteria.where("create_time").gt("2017-03-05 17:37:00").where("create_time").lt("2017-03-05 17:38:00");
-
 
         List<JSONObject> datalist = new ArrayList();
         Query query = new Query().skip( (pageIndex -1) * pageSize).limit(pageSize).with(new Sort(Sort.Direction.DESC,"create_time"));
@@ -167,6 +165,17 @@ public  class ObjDaoImpl  implements ObjDao {
     public ResultMessage update(JSONObject obj) {
         ResultMessage resultMessage = new ResultMessage();
         collectionName = obj.getString("collectionName");
+
+        JSONObject findParam = new JSONObject();
+        findParam.put("collectionName",collectionName);
+        PageModel<JSONObject> pageModel = this.findAll(findParam);
+        if(pageModel.getCount() == 0){
+            resultMessage.setSuccess(false);
+            resultMessage.setMessage("没有查询到数据，不能更新操作");
+            return resultMessage;
+        }
+
+
         JSONObject queryParam = obj.getJSONObject("queryParam");
         JSONObject updateParam  = obj.getJSONObject("updateParam");
 
@@ -202,7 +211,7 @@ public  class ObjDaoImpl  implements ObjDao {
         }
 
         Query query = new Query(criteria);
-        mongoTemplate.upsert(query,update,collectionName);
+        mongoTemplate.updateMulti(query,update,collectionName);
 
         resultMessage.setMessage("修改成功");
         return resultMessage;

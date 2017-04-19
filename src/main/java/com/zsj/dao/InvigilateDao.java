@@ -19,6 +19,9 @@ import java.util.Set;
 @Repository
 public class InvigilateDao extends ObjDaoImpl {
 
+    public static final String Invigilate = "invigilates";
+
+
     public PageModel<JSONObject> findByDate(JSONObject obj){
 
         Integer pageIndex = obj.getInteger("pageIndex") ;

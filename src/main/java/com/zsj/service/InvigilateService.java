@@ -19,6 +19,7 @@ public interface InvigilateService {
     "date" : //监考日期
     "datetime":"" ,   //监考时间
     "price" : ""  // 价格
+    "current_price" : "" //监考实时价格
     "seller" : ""  //卖家
     "buyer" : "" // 买家
     "content" : ""   //备注内容
@@ -39,6 +40,16 @@ public interface InvigilateService {
 
     ResultMessage deny(JSONObject obj) ;
 
+    /**
+     *
+     * @param obj
+     * {
+     *     "_id":"",  //监考id
+     *     "buyer":"" //买家名字
+     *     "state":"未完成"
+     * }
+     * @return
+     */
     ResultMessage buy(JSONObject obj) ;
 
     ResultMessage update(JSONObject obj) ;

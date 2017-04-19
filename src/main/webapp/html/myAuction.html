@@ -2,27 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>我的拍卖</title>
+    <title>我的竞拍</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script type="application/javascript" src="js/jquery-2.2.3.min.js"></script>
     <script type="application/javascript" src="js/bootstrap.min.js"></script>
 
-
     <script type="application/javascript" src="js/jquery-jtemplates.js"></script>
     <script type="application/javascript" src="js/jquerySession.js"></script>
-    <!--<script type="application/javascript" src="js/users/getUser.js"></script>-->
     <script type="application/javascript" src="js/nav/nav.js"></script>
-
-    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
-    <script type="application/javascript" src="js/moment-with-locales.min.js"></script>
-    <script type="application/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
-    <script type="application/javascript" src="js/date/datetimePicker.js"></script>
-
     <link rel="stylesheet" type="text/css" href="css/xcConfirm.css"/>
     <script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
     <script type="application/javascript" src="js/invigilates/add.js"></script>
+    <script type="application/javascript" src="js/invigilates/myAuction.js"></script>
 
-    <script type="application/javascript" src="js/invigilates/mySell.js"></script>
+
 
     <style>
         body {
@@ -81,8 +74,8 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-1"></div>
-        <div class="col-lg-10">
+        <!--<div class="col-lg-1"></div>-->
+        <div class="col-lg-11">
             <div style="height: 15px"></div>
             <div id="result"></div>
             <textarea id="template" style="display: none" >
@@ -90,14 +83,10 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>学校</th>
-                                <th>地址</th>
-                                <th>时间</th>
-                                <th>科目</th>
-                                <th>一口价</th>
-                                <th>竞拍完成价</th>
-                                <th>监考状态</th>
-                                <th>买家</th>
+                                <th>监考编号</th>
+                                <th>我的出价</th>
+                                <th>当前拍卖价</th>
+                                <th>竞拍状态</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -105,27 +94,18 @@
                         <tbody>
                             {#foreach $T.table as record}
                             <tr>
-                                <td>{$T.record.school}</td>
-                                <td>{$T.record.address}</td>
-                                <td>{$T.record.datetime}</td>
-                                <td>{$T.record.subject}</td>
-                                <td>{$T.record.price}</td>
-                                <td>{$T.record.current_price}</td>
-                                <td>{$T.record.state}</td>
-                                <td>{$T.record.buyer}</td>
+                                <td>{$T.record.invigilate_id}</td>
+                                <td>{$T.record.my_price}</td>
+                                <td><span class="text-danger">{$T.record.current_price}</span></td>
+                                <td><span class="text-danger">{$T.record.state}</span></td>
                                 <td>
                                      <span  style="display: none" class="span_state">{$T.record.state}</span>
-                                     <button type="button" class="btn btn-success" id="btnMySell-update" >修改</button>
-                                     <span  style="display: none" class="span_id">{$T.record._id}</span>
-                                </td>
-                                <td>
-                                    <span  style="display: none" class="span_state">{$T.record.state}</span>
-                                     <button type="button" class="btn btn-danger" id="btnMySell-endAuction" >结束竞拍</button>
-                                     <span  style="display: none" class="span_id">{$T.record._id}</span>
+                                     <button type="button" class="btn btn-info" id="btnAuction-auction" >继续竞价</button>
+                                     <span  style="display: none" class="span_id">{$T.record.invigilate_id}</span>
                                 </td>
                                 <td>
                                      <span  style="display: none" class="span_state">{$T.record.state}</span>
-                                     <button type="button" class="btn btn-primary" id="btnMySell-del">删除</button>
+                                     <button type="button" class="btn btn-danger" id="btnAuction-del" >删除记录</button>
                                      <span  style="display: none" class="span_id">{$T.record._id}</span>
                                 </td>
                             </tr>
@@ -135,11 +115,8 @@
                 </div>
             </textarea>
         </div>
-        <!--<div class="col-lg-1"></div>-->
     </div>
 </div>
-
-
 
 
 <div class="modal fade" id="modal-addInvigilate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -171,6 +148,7 @@
                                 <span class="glyphicon glyphicon-calendar" id="addbtn-datetime"></span>
                             </span>
                     </div>
+                    <!--<input type="text"  class="form-control" id="addText-datetime" placeholder="日期时间">-->
                 </div>
                 <div class="form-group">
                     <label >一口价</label>
@@ -196,48 +174,22 @@
 </div>
 
 
-<div class="modal fade" id="modal-updateInvigilate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+
+<div class="modal fade" id="modal-auction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="myModalLabel2">发布监考</h4>
+                <h4 class="modal-title" id="myModalLabel2">竞拍价格</h4>
             </div>
             <div class="modal-body">
-
                 <div class="form-group">
-                    <label>学校</label>
-                    <input type="text" class="form-control" id="updateText-school" placeholder="学校">
-                </div>
-                <div class="form-group">
-                    <label>具体地址</label>
-                    <input type="text"  class="form-control" id="updateText-address" placeholder="具体地址">
-                </div>
-                <div class="form-group">
-                    <label>监考科目</label>
-                    <input type="text"  class="form-control" id="updateText-subject" placeholder="监考科目">
-                </div>
-                <div class="form-group">
-                    <label>日期时间</label>
-                    <div class='input-group date' id="update-datetimepicker">
-                        <input type="text" class="form-control" id="updateText-datetime" />
-                        <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar" id="updatebtn-datetime"></span>
-                            </span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label >一口价</label>
-                    <input type="text"  class="form-control" id="updateText-price" placeholder="价格">
-                </div>
-                <div class="form-group">
-                    <label >备注</label>
-                    <input type="text"  class="form-control" id="updateText-content" placeholder="您的联系方式,注意事项等">
+                    <label>价格</label>
+                    <input type="text" class="form-control" id="auction-price" placeholder="价格">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
-                <button type="button" id="btn-submitUpdateInvigilate" class="btn btn-danger" >
+                <button type="button" id="btn-submitAuction" class="btn btn-danger" >
                     提交
                 </button>
             </div>
