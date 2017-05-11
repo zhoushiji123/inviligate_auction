@@ -142,6 +142,9 @@ $(function () {
                     if(res.success == true){
                         window.wxc.xcConfirm("操作成功", window.wxc.xcConfirm.typeEnum.success);
                         getMySellIvg();
+                    }else{
+                        window.wxc.xcConfirm("操作失败: "+res.message, window.wxc.xcConfirm.typeEnum.error);
+                        return false;
                     }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {

@@ -20,7 +20,6 @@ public interface ObjDao {
      * @return
      */
     PageModel<JSONObject> findByPage(JSONObject obj);
-
     /**
      * 条件查询(支持单条件,多条件,支持分页 )
      * @param obj
@@ -56,8 +55,6 @@ public interface ObjDao {
      * @return
      */
     ResultMessage update(JSONObject obj);
-
-
     ResultMessage deleteByTerm(JSONObject obj);
 
 
@@ -67,9 +64,5 @@ public interface ObjDao {
      * @return
      */
     JSONObject setId(JSONObject obj);
-
-
     PageModel<JSONObject> findAll(JSONObject obj);
-
-
 }

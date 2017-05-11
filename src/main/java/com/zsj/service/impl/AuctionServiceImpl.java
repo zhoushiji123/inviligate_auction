@@ -12,6 +12,11 @@ import com.zsj.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by zsj on 2017/4/18.
  */
@@ -29,16 +34,37 @@ public class AuctionServiceImpl implements AuctionService {
 
     public ResultMessage takePartInAuction(JSONObject obj) {
         ResultMessage resultMessage ;
-        String username = obj.getString("username");
+        String username = obj.getString("username"); //参与的用户名字
         String invigilate_id = obj.getString("invigilate_id");
 
-        int my_price = obj.getInteger("my_price");
+
+
+
+        //判断输入的价格是否为数字
+        if(!this.isNumeric(obj.getString("my_price"))){
+            resultMessage = new ResultMessage();
+            resultMessage.setSuccess(false);
+            resultMessage.setMessage("竞拍失败：输入的值有误！");
+            return  resultMessage;
+        }
+
         int current_price = obj.getInteger("current_price");
+        int my_price = obj.getInteger("my_price");
 
         JSONObject checkParam = new JSONObject();
         checkParam.put("collectionName",InvigilateDao.Invigilate);
         checkParam.put("_id",invigilate_id);
-        JSONObject invigilate = invigilateDao.findByTerm(checkParam).getData().get(0);
+
+        PageModel<JSONObject> pageModel1 = invigilateDao.findByTerm(checkParam);
+        JSONObject invigilate ;
+        if(pageModel1.getCount() == 0){
+            resultMessage = new ResultMessage();
+            resultMessage.setSuccess(false);
+            resultMessage.setMessage("该监考已经结束竞拍了！");
+            return  resultMessage;
+        }
+
+        invigilate = pageModel1.getData().get(0);
 
         String seller = invigilate.getString("seller");
         if(seller.equals(username)){
@@ -64,6 +90,13 @@ public class AuctionServiceImpl implements AuctionService {
             return resultMessage;
         }
 
+        if(!this.isDateConflict(username,invigilate)){
+            resultMessage = new ResultMessage();
+            resultMessage.setSuccess(false);
+            resultMessage.setMessage("发生日期冲突，在这个时间段的前后3小时，您已经有监考竞拍的参与了！");
+            return  resultMessage;
+        }
+
         JSONObject param  = new JSONObject();
         param.put("collectionName",AuctionDao.Auction);
         param.put("username",username);
@@ -84,9 +117,7 @@ public class AuctionServiceImpl implements AuctionService {
             updateParamOthers.put("state","竞拍落后");
             param2.put("queryParam",queryParamOthers);
             param2.put("updateParam",updateParamOthers);
-
             resultMessage = auctionDao.update(param2);
-
             obj.put("collectionName",AuctionDao.Auction);
             resultMessage = auctionDao.insert(obj);
 
@@ -145,9 +176,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     public ResultMessage endAuction(JSONObject obj) {
-
         ResultMessage resultMessage;
-
         String invigilate_id = obj.getString("invigilate_id");
 
         //查询到当前监考 和领先者的名字 和状态(只能竞拍中)
@@ -156,15 +185,21 @@ public class AuctionServiceImpl implements AuctionService {
         param.put("collectionName",InvigilateDao.Invigilate);
         PageModel<JSONObject> pageModel = invigilateDao.findByTerm(param);
         String username = pageModel.getData().get(0).getString("buyer");
-
         String state = pageModel.getData().get(0).getString("state");
+
+        if(username.equals("") || username==null){
+            resultMessage = new ResultMessage();
+            resultMessage.setMessage("竞拍者为空，不能结束");
+            resultMessage.setSuccess(false);
+            return  resultMessage;
+        }
+
         if(!state.equals("竞拍中")){
             resultMessage = new ResultMessage();
             resultMessage.setMessage("只能操作于竞拍中的监考");
             resultMessage.setSuccess(false);
             return  resultMessage;
         }
-
         //修改所有该监考的竞拍信息状态为     "竞拍失败"
         JSONObject param2 = new JSONObject();
         JSONObject queryParam2 = new JSONObject();
@@ -178,7 +213,6 @@ public class AuctionServiceImpl implements AuctionService {
         resultMessage =  auctionDao.update(param2);
 
         //修改最后竞拍领先者的竞拍信息状态为   "竞拍成功"
-
         JSONObject param3 = new JSONObject();
         JSONObject queryParam3 = new JSONObject();
         JSONObject updateParam3 = new JSONObject();
@@ -188,7 +222,6 @@ public class AuctionServiceImpl implements AuctionService {
         param3.put("collectionName",AuctionDao.Auction);
         param3.put("queryParam",queryParam3);
         param3.put("updateParam",updateParam3);
-
         resultMessage =  auctionDao.update(param3);
 
         //修改改监考的状态为  "未完成"
@@ -200,7 +233,6 @@ public class AuctionServiceImpl implements AuctionService {
         param4.put("collectionName",InvigilateDao.Invigilate);
         param4.put("queryParam",queryParam4);
         param4.put("updateParam",updateParam4);
-
         resultMessage = invigilateDao.update(param4);
 
         //添加一条 拍卖结果信息
@@ -218,5 +250,51 @@ public class AuctionServiceImpl implements AuctionService {
     public ResultMessage delAuction(JSONObject obj) {
         obj.put("collectionName",AuctionDao.Auction);
         return auctionDao.deleteByTerm(obj);
+    }
+
+
+    /**
+     * 判断 竞拍者/买家 所参与竞拍/购买的监考是否有时间上的冲突
+     * 遍历所有该竞拍者所参与的竞拍/已购买的监考
+     * 要竞拍/购买的监考，跟其他已经竞拍/购买的监考比较时间，
+     * 如果时间相差大于3或者小于-3 小时，且监考id不同，则视为发生冲突
+     * @param username 用户名
+     * @param invigilate 监考
+     * @return
+     */
+    public  boolean isDateConflict(String username,JSONObject invigilate){
+
+        String id1 = invigilate.getString("_id");
+        Date date1  =invigilate.getDate("datetime");
+
+        JSONObject param1 = new JSONObject();
+        param1.put("collectionName",InvigilateDao.Invigilate);
+        param1.put("buyer",username);
+
+        PageModel<JSONObject> pageModel = invigilateDao.findByTerm(param1);
+        List<JSONObject> myIvgs = pageModel.getData();
+        if(pageModel.getCount() == 0)
+            return  true ;    //第一次购买或者竞拍
+
+        for (JSONObject myivg : myIvgs){
+            String id2 = myivg.getString("_id");
+            Date date2 = myivg.getDate("datetime");
+            String state = myivg.getString("state");
+            int diffhour = Math.abs(DateUtil.daysDiff(date1,date2));
+            if(!id1.equals(id2) && diffhour<=3 && !state.equals("已完成"))
+                return false;   //监考id不相等，小时差小于3小时，发生日期冲突
+        }
+
+        return true;
+    }
+
+
+    public boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[1-9][0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if( !isNum.matches() ){
+            return false;
+        }
+        return true;
     }
 }

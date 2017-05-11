@@ -11,6 +11,9 @@ import com.zsj.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by zsj on 2017/3/4.
  */
@@ -64,14 +67,14 @@ public class InvigilateServiceImpl implements InvigilateService{
     public ResultMessage buy(JSONObject obj) {
         ResultMessage resultMessage;
         String invigilate_id = obj.getString("_id");
-        String username = obj.getString("buyer");
+        String username = obj.getString("buyer"); //参与的用户名
 
         //判断不能购买自己的监考和监考状态
         JSONObject param1 = new JSONObject();
         param1.put("collectionName",InvigilateDao.Invigilate);
         param1.put("_id",invigilate_id);
         PageModel<JSONObject> pageModel = invigilateDao.findByTerm(param1);
-        JSONObject invigilate = pageModel.getData().get(0);
+        JSONObject invigilate = pageModel.getData().get(0); //所购买或者竞拍的监考
         String seller = invigilate.getString("seller");
 
         int price = invigilate.getInteger("price");
@@ -88,6 +91,14 @@ public class InvigilateServiceImpl implements InvigilateService{
             resultMessage = new ResultMessage();
             resultMessage.setSuccess(false);
             resultMessage.setMessage("该监考已经结束竞拍了！");
+            return  resultMessage;
+        }
+
+        //判断日期是否冲突
+        if(!this.isDateConflict(username,invigilate)){
+            resultMessage = new ResultMessage();
+            resultMessage.setSuccess(false);
+            resultMessage.setMessage("发生日期冲突，在这个时间段的前后3小时，您已经有监考竞拍的参与了！");
             return  resultMessage;
         }
 
@@ -160,5 +171,41 @@ public class InvigilateServiceImpl implements InvigilateService{
     public ResultMessage giveup(JSONObject obj) {
         obj.put("collectionName",collectionName);
         return invigilateDao.update(obj) ;
+    }
+
+
+    /**
+     * 判断 竞拍者/买家 所参与竞拍/购买的监考是否有时间上的冲突
+     * 遍历所有该竞拍者所参与的竞拍/已购买的监考
+     * 要竞拍/购买的监考，跟其他已经竞拍/购买的监考比较时间，
+     * 如果时间相差大于3或者小于-3 小时，且监考id不同，则视为发生冲突
+     * @param username 用户名
+     * @param invigilate 监考
+     * @return
+     */
+    public  boolean isDateConflict(String username,JSONObject invigilate){
+
+        String id1 = invigilate.getString("_id");
+        Date date1  =invigilate.getDate("datetime");
+
+        JSONObject param1 = new JSONObject();
+        param1.put("collectionName",InvigilateDao.Invigilate);
+        param1.put("buyer",username);
+
+        PageModel<JSONObject> pageModel = invigilateDao.findByTerm(param1);
+        List<JSONObject> myIvgs = pageModel.getData();
+        if(pageModel.getCount() == 0)
+            return  true ;    //第一次购买或者竞拍
+
+        for (JSONObject myivg : myIvgs){
+            String id2 = myivg.getString("_id");
+            Date date2 = myivg.getDate("datetime");
+            String state = myivg.getString("state");
+            int diffhour = Math.abs(DateUtil.daysDiff(date1,date2));
+            if(!id1.equals(id2) && diffhour<=3 && !state.equals("已完成"))
+                return false;   //监考id不相等，小时差小于3小时，发生日期冲突
+        }
+
+        return true;
     }
 }

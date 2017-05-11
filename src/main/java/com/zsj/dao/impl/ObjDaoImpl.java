@@ -27,10 +27,6 @@ public  class ObjDaoImpl  implements ObjDao {
     public MongoTemplate mongoTemplate;
     public String collectionName ;
 
-
-
-
-
     public PageModel<JSONObject> findByPage(JSONObject obj) {
         Integer pageIndex = obj.getInteger("pageIndex") ;
         Integer pageSize  =  obj.getInteger("pageSize") ;
@@ -57,12 +53,10 @@ public  class ObjDaoImpl  implements ObjDao {
         for(JSONObject jsonObject : list){
             datalist.add(this.setId(jsonObject));
         }
-
         pageModel.setData(datalist);
         pageModel.setCount(datalist.size());
         pageModel.setPageSize(pageSize);
         pageModel.setPageIndex(pageIndex);
-
         return pageModel;
     }
 
