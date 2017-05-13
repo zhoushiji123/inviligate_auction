@@ -23,8 +23,8 @@ public class MessageUtil {
     private static String Url = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
 
     public static String ali_template_identify = "SMS_67180094"; //注册认证模板号
-    public static String ali_template_notice = "SMS_67265079";  //通知模板号
-
+    public static String ali_template_notice = "SMS_67265079";  //监考完成--通知模板号
+    public static String ali_template_notice2 = "SMS_67200149";  //竞拍成功--通知模板号
     /**
      * 发送短信
      * @param phone  电话号码

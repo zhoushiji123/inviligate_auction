@@ -5,10 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.zsj.dao.AuctionDao;
 import com.zsj.dao.InvigilateDao;
 import com.zsj.dao.ResultDao;
+import com.zsj.dao.UserDao;
 import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 import com.zsj.service.AuctionService;
 import com.zsj.util.DateUtil;
+import com.zsj.util.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,10 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Autowired
     private ResultDao resultDao;
+
+
+    @Autowired
+    private UserDao userDao;
 
     public ResultMessage takePartInAuction(JSONObject obj) {
         ResultMessage resultMessage ;
@@ -242,6 +248,16 @@ public class AuctionServiceImpl implements AuctionService {
         param5.put("message",message);
         param5.put("collectionName",ResultDao.Results);
         resultMessage = resultDao.insert(param5);
+
+        //给竞拍成功者发一条短信通知
+        JSONObject param6= new JSONObject();
+        param6.put("collectionName","users");
+        param6.put("username",username);
+        String phone = userDao.findByTerm(param6).getData().get(0).getString("telephone");
+
+        JSONObject msgParam = new JSONObject();
+        msgParam.put("username",username);
+        MessageUtil.aliMsg(phone,msgParam,MessageUtil.ali_template_notice2);
 
         return resultMessage;
     }
