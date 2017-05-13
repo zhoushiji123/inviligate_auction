@@ -7,6 +7,7 @@ import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 import com.zsj.service.UserService;
 import com.zsj.util.MD5;
+import com.zsj.util.RedisUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AuthDao authDao;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
     public ResultMessage register(JSONObject obj) {
         ResultMessage resultMessage ;
         String username = obj.getString("username");
@@ -37,16 +41,37 @@ public class UserServiceImpl implements UserService {
             return resultMessage;
         }
 
-        JSONObject param2 = new JSONObject();
-        param2.put("telphone",obj.getString("telephone"));
-        param2.put("collectionName","users");
-        pageModel = userDao.findByTerm(param2);
-        if(pageModel.getCount() > 0){
+        //验证码校验
+        String code = obj.remove("code").toString();
+        String phone = obj.getString("telephone");
+
+        if(!redisUtil.hasKey(phone)){
             resultMessage = new ResultMessage();
             resultMessage.setSuccess(false);
-            resultMessage.setMessage("该手机号已经注册过了");
+            resultMessage.setMessage("验证码不正确或者已经超时！");
             return resultMessage;
         }
+
+        String redisCode = redisUtil.get(phone).toString().trim();
+
+        System.out.println(redisCode);
+        if(!code.equals(redisCode)){
+            resultMessage = new ResultMessage();
+            resultMessage.setSuccess(false);
+            resultMessage.setMessage("验证码不正确或者已经超时！");
+            return resultMessage;
+        }
+
+//        JSONObject param2 = new JSONObject();
+//        param2.put("telphone",obj.getString("telephone"));
+//        param2.put("collectionName","users");
+//        pageModel = userDao.findByTerm(param2);
+//        if(pageModel.getCount() > 0){
+//            resultMessage = new ResultMessage();
+//            resultMessage.setSuccess(false);
+//            resultMessage.setMessage("该手机号已经注册过了");
+//            return resultMessage;
+//        }
 
 
         resultMessage = userDao.insert(obj);

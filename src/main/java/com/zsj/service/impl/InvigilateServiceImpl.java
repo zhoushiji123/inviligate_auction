@@ -4,11 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.zsj.dao.AuctionDao;
 import com.zsj.dao.InvigilateDao;
 import com.zsj.dao.ResultDao;
+import com.zsj.dao.UserDao;
 import com.zsj.model.PageModel;
 import com.zsj.model.ResultMessage;
 import com.zsj.service.InvigilateService;
 import com.zsj.util.DateUtil;
+import com.zsj.util.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.Message;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -30,6 +33,9 @@ public class InvigilateServiceImpl implements InvigilateService{
 
     @Autowired
     private ResultDao resultDao;
+
+    @Autowired
+    private UserDao userDao;
 
 
     public ResultMessage addInvigilate(JSONObject obj) {
@@ -164,8 +170,38 @@ public class InvigilateServiceImpl implements InvigilateService{
     }
 
     public ResultMessage finish(JSONObject obj) {
+
+        String ivg_id = obj.remove("ivg_id").toString();
+
         obj.put("collectionName",collectionName);
-        return invigilateDao.update(obj) ;
+       ResultMessage resultMessage = invigilateDao.update(obj);
+
+        //查询指定监考
+        JSONObject object2 = new JSONObject();
+        object2.put("collectionName",collectionName);
+        object2.put("_id",ivg_id);
+
+        //查询卖家的手机号码，并向他发送短信通知
+        PageModel<JSONObject> pageModel = invigilateDao.findByTerm(object2);
+
+        JSONObject invigilate = pageModel.getData().get(0);
+        String seller = invigilate.getString("seller");
+        String buyer = invigilate.getString("buyer");
+        JSONObject msgParam = new JSONObject();
+        msgParam.put("seller",seller);
+        msgParam.put("buyer",buyer);
+
+
+        JSONObject object3= new JSONObject();
+        object3.put("collectionName","users");
+        object3.put("username",seller);
+        JSONObject userSeller = userDao.findByTerm(object3).getData().get(0);
+
+        String sellerPhone = userSeller.getString("telephone");
+
+        MessageUtil.aliMsg(sellerPhone,msgParam,MessageUtil.ali_template_notice);
+
+        return resultMessage;
     }
 
     public ResultMessage giveup(JSONObject obj) {
